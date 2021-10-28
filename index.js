@@ -30,13 +30,13 @@ async function run() {
         //add event
         app.post("/addEvents", async (req, res) => {
             const result = await eventsCollection.insertOne(req.body);
-            console.log(result);
+            res.send(result);
         })
 
         //get search events{
         app.get('/searchEvents', async (req, res) => {
             console.log(req.query.search);
-            const result = await eventsCollection.find({ title: { $regex: req.query.search }, }).toArray();
+            const result = await eventsCollection.find({ eventName: { $regex: req.query.search }, }).toArray();
             res.send(result)
         })
 
@@ -48,6 +48,10 @@ async function run() {
         })
 
         //get all volunteer
+        app.get('/allVolunteer', async (req, res) => {
+            const result = await volunteerCollection.find({}).toArray();
+            res.json(result)
+        })
 
 
     } finally {
