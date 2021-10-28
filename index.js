@@ -16,6 +16,7 @@ async function run() {
         await client.connect();
         const database = client.db("Volunteer-for-humanity");
         const eventsCollection = database.collection("events");
+        const volunteerCollection = database.collection("volunteer");
 
 
         // Get events API
@@ -25,6 +26,29 @@ async function run() {
             events = await cursor.toArray();
             res.json(events)
         })
+
+        //add event
+        app.post("/addEvents", async (req, res) => {
+            const result = await eventsCollection.insertOne(req.body);
+            console.log(result);
+        })
+
+        //get search events{
+        app.get('/searchEvents', async (req, res) => {
+            console.log(req.query.search);
+            const result = await eventsCollection.find({ title: { $regex: req.query.search }, }).toArray();
+            res.send(result)
+        })
+
+        //add volunteer
+        app.post("/addVolunteer", async (req, res) => {
+            const result = await volunteerCollection.insertOne(req.body);
+            console.log(result);
+            res.send(result)
+        })
+
+        //get all volunteer
+
 
     } finally {
         // await client.close();
